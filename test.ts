@@ -1,15 +1,14 @@
-import Calculator, { Arguments, Operation } from "./calculator";
+import Gender from "./gender";
+import RegistrationForm from "./registration-form";
 
-export default class CalculatorTest {
+const f = "Her";
+const l = "Ger";
+const g = Gender.FEMALE;
+const b = new Date('1995-10-10');
+const email = "sdogdfjkg"//"dksjfhs@ghgk.com"
+const p = "Jk523457!"
+const cp = "Jk523457!"
 
-    static checkSubstractionPositive(): string {
-        const args = new Arguments(10, 2);
-        const oper = Operation.SUBTRACTION;
+const reg = new RegistrationForm().register(f, l, null, email, p, cp, b, g);
 
-        const calc = new Calculator(args, oper);
-        const actualResult = calc.calc();
-        const expectedResult: number = 8;
-        let isResultAsExpected = actualResult === expectedResult;
-        return "Test is passed: " + isResultAsExpected;
-    }
-}
+console.log(reg);

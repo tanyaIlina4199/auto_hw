@@ -1,0 +1,5 @@
+{
+    "extension": ["ts"],
+    "spec": ["test/*.mocha.ts"],
+    "require": ["ts-node/register"]
+}
