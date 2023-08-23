@@ -1,6 +1,6 @@
 import assert from "assert";
-import RegistrationForm from "../registration-form";
-import Gender from "../gender";
+import RegistrationForm from "../reg-form-data/registration-form";
+import Gender from "../reg-form-data/gender";
 
 interface TestCase {
     testcaseName: string;
