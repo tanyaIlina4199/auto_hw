@@ -1,6 +1,6 @@
 import { expect } from "chai";
-import HttpClient from "../httpclient";
-import { TestData } from "../testdata";
+import HttpClient from "../api-tests-data/httpclient";
+import { TestData } from "../api-tests-data/testdata";
 
 describe("API testing of get requests", () => {
     test("GET testing", async () => {
