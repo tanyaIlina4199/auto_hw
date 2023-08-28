@@ -30,6 +30,7 @@ export default class RegistrationForm {
 
             this.assertEmailOrPhone(phone, email);
             this.assertEmail(email);
+            this.assertGender(gender);
             this.assertPhone(phone);
             this.assertDate(birthDate);
             this.assertFirstname(firstname, lastname);
@@ -55,6 +56,12 @@ export default class RegistrationForm {
         }
     }
 
+    private assertGender(gender: Gender): void {
+        if (gender == undefined || gender == null) {
+            throw new Error("You should fill gender");
+        }
+    }
+
     private assertMatchPassword(pass: string, confirmPassword: string): void {
         if (pass !== confirmPassword) {
             throw new Error("Password mismatch");
@@ -63,7 +70,7 @@ export default class RegistrationForm {
 
     private assertEmail(email: string): void {
         if (email !== undefined && email !== null) {
-            const exp: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+            const exp: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z.]{2,}$/i;
 
             if (!exp.test(email)) {
                 throw new Error("Email is incorrect");
@@ -72,7 +79,7 @@ export default class RegistrationForm {
     }
 
     private assertFirstname(firstname: string, lastname: string): void {
-        const exp: RegExp = /^[a-zA-Z ]+$/;
+        const exp: RegExp = /^[a-zA-Z -]{1,40}$/;
 
         const isCorrectFirstName = exp.test(firstname);
         const isCorrectLastName = exp.test(lastname);
@@ -97,10 +104,14 @@ export default class RegistrationForm {
         if (birthDate.valueOf() > now.valueOf()) {
             throw new Error("Birth date couldn't be greater than now");
         }
+
+        if (birthDate.toString() === "Invalid Date") {
+            throw new Error("Invalid Date")
+        }
     }
 
     private assertPassword(pass: string) {
-        const exp: RegExp = /(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}/g;
+        const exp: RegExp = /(?=.*[0-9])(?=.*[?!@#$%^&*.])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,30}/g;
 
         if (!exp.test(pass)) {
             throw new Error("Password is incorrect");
