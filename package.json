@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --require ts-node/register test/**/*.mocha.spec.ts",
-    "test-jest": "jest test/api-testing.jest.spec.ts",
+    "test-jest": "jest ./test/api-testing.jest.spec.ts",
     "test-playwright": "npx playwright test --config=playwright.config.ts --project=chrome --reporter=allure-playwright --headed ./test/playwright.spec.ts",
     "generate-report": "npx allure generate ./allure-results --clean",
     "open-report": "npx allure open ./allure-report"
