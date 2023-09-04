@@ -19,7 +19,10 @@ const config: PlaywrightTestConfig = {
                 }
             }
         }
-    ]
+    ],
+    use: {
+        screenshot: 'only-on-failure'
+    }
 };
 
 export default config;

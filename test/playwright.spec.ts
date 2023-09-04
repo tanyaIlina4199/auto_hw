@@ -11,24 +11,22 @@ test.describe("Common tests", () => {
     test("Title test", async ({ page }) => {
         const homepage = new PageFactory(page).getPage(PageName.HOME_PAGE);
         await homepage.open();
-        const mainpage = homepage.getPage();
-        expect(await mainpage.title()).toBe("Vacation Homes & Condo Rentals - Airbnb");
+        const title = await homepage.getTitle();
+        expect(title).toBe("Vacation Homes & Condo Rentals - Airbnb");
     });
 
     test("Choose country", async ({ page }) => {
         const homepage = new PageFactory(page).getPage(PageName.HOME_PAGE);
         await homepage.open();
-        const mainpage = homepage.getPage();
-        mainpage.setDefaultTimeout(timeout * 5);
-        await mainpage.locator("div.lkm6i7z button:nth-of-type(1) > div").click();
-        await mainpage.locator("div.hxsn4eb div:nth-of-type(4) img").click();
-        await mainpage.locator("[data-testid='expanded-searchbar-dates-months-tab']").click();
-        await mainpage.locator("div.c6ezw63 div.lycybj5").click();
-        await mainpage.locator("[data-testid='stepper-adults-increase-button'] > span").click();
-        await mainpage.locator("[data-testid='stepper-adults-increase-button'] > span").click();
-        await mainpage.locator("span.t1ng71ne > span").click();
+        await homepage.clickSearchButton();
+        await homepage.clickUnitedStatesRegion();
+        await homepage.clickMonthsBar();
+        await homepage.clickButton("div.c6ezw63 div.lycybj5");
+        await homepage.increaseAdultsInSearch();
+        await homepage.increaseAdultsInSearch();
+        await homepage.clickShowSearchResults();
 
-        const url = await mainpage.url();
+        const url = await homepage.getUrl();
         const includeUS = url.includes("United-States");
 
         expect(includeUS).toBe(true);
@@ -37,23 +35,20 @@ test.describe("Common tests", () => {
 
 test.describe("Filter tests", () => {
     test("Price filter", async ({ page }) => {
+        const value = "800";
+
         const homepage = new PageFactory(page).getPage(PageName.HOME_PAGE);
         await homepage.open();
-        const mainpage = homepage.getPage();
-        mainpage.setDefaultTimeout(timeout);
-        await mainpage.locator("[data-testid='category-bar-filter-button'] > span").click();
-        await mainpage.locator("[data-testid='category-bar-filter-button'] > span").click()
-        await mainpage.locator("#price_filter_max").click()
-        await mainpage.locator("#price_filter_max").clear()
-        await mainpage.locator("#price_filter_max").fill("800");
-        await mainpage.locator("div.cckqhgg > div").click()
-        await mainpage.locator("footer > a").click()
-        mainpage.setDefaultTimeout(timeout);
-        await mainpage.locator("[data-testid='category-bar-filter-button'] > span").click()
+        await homepage.clickFilterButton();
+        await homepage.clickPriceMaxField();
+        await homepage.fillMaxPriceValue(value);
+        await homepage.clickShowResultButton();
+        await homepage.clickButton("footer > a");
+        await homepage.clickFilterButton();
 
-        const price = await mainpage.locator("#price_filter_max").inputValue();
+        const price = await homepage.getInputValue("#price_filter_max");
         console.log(price);
-        expect(price).toBe("800");
+        expect(price).toBe(value);
     });
 
     test("Select filters", async ({ page }) => {
@@ -64,8 +59,9 @@ test.describe("Filter tests", () => {
 
         const homepage = new PageFactory(page).getPage(PageName.HOME_PAGE);
         await homepage.open();
+        await homepage.clickFilterButton();
+
         const mainpage = homepage.getPage();
-        await mainpage.locator("[data-testid='category-bar-filter-button'] > span").click();
         await mainpage.locator("div.ig5jtz2 > div:nth-of-type(1) [data-testid='menuItemButton-3'] > button").click();
         await mainpage.locator("div.g1rlxjq4 > div:nth-of-type(2) button").click();
         const houseValueAfterClick = await mainpage.locator("div.g1rlxjq4 > div:nth-of-type(2) button").getAttribute("aria-pressed");
@@ -94,36 +90,33 @@ test.describe("Filter tests", () => {
 
 test.describe("Login test", () => {
 
-    test.only("Succesful login", async ({ page }) => {
+    test("Succesful login", async ({ page }) => {
         const homepage = new PageFactory(page).getPage(PageName.HOME_PAGE);
         await homepage.open();
-        const mainpage = homepage.getPage();
-        mainpage.setDefaultTimeout(timeout);
-        await mainpage.locator("div._3hmsj div:nth-of-type(1) > svg").click();
-        await mainpage.locator("[data-testid='cypress-headernav-login']").click();
-        await mainpage.locator("div:nth-of-type(4) div._bc4egv").click();
-        await mainpage.locator("[data-testid='email-login-email']").click()
-        await mainpage.locator("[data-testid='email-login-email']").type(username);
-        await mainpage.locator("span.t1ng71ne > span").click();
-        await mainpage.locator("[data-testid='email-signup-password']").click();
-        await mainpage.locator("[data-testid='email-signup-password']").type(password);
-        await mainpage.locator("span.t1ng71ne > span").click();
-        await mainpage.locator("div.cqtawrq img").click();
-        await mainpage.locator("a:nth-of-type(7) > div").click();
+        await homepage.clickProfile();
+        await homepage.clickLogin();
+        await homepage.clickLoginWithEmail();
+        await homepage.typeEmail(username);
+        await homepage.clickContinue();
+        await homepage.fillPassword(password);
+        await homepage.clickContinue();
+        await homepage.clickProfile();
+        await homepage.clickButton("a:nth-of-type(7) > div");
 
-        expect(mainpage.url()).toBe('https://www.airbnb.com/account-settings');
+        const url = await homepage.getUrl();
+        expect(url).toBe('https://www.airbnb.com/account-settings');
     });
+
     test("Incorrect email", async ({ page }) => {
         const homepage = new PageFactory(page).getPage(PageName.HOME_PAGE);
         await homepage.open();
-        const mainpage = homepage.getPage();
-        mainpage.setDefaultTimeout(40000);
-        await mainpage.locator("[data-testid='cypress-headernav-profile']").click();
-        await mainpage.locator("[data-testid='cypress-headernav-login'] > div").click();
-        await mainpage.locator("[data-testid='social-auth-button-email']").click();
-        await mainpage.locator("[data-testid='email-login-email']").type("ygguhgjg");
-        await mainpage.locator("span.t1ng71ne > span").click();
+        await homepage.clickProfile();
+        await homepage.clickLogin();
+        await homepage.clickLoginWithEmail();
+        await homepage.typeEmail("ygguhgjg");
+        await homepage.clickContinue();
 
+        const mainpage = homepage.getPage();
         const error = await mainpage.getByTestId("email-login-email-InputField-help-error").textContent();
         expect(error).toBe("Enter a valid email.");
     });
@@ -131,17 +124,16 @@ test.describe("Login test", () => {
     test("Incorrect password", async ({ page }) => {
         const homepage = new PageFactory(page).getPage(PageName.HOME_PAGE);
         await homepage.open();
-        const mainpage = homepage.getPage();
-        mainpage.setDefaultTimeout(40000);
-        await mainpage.locator("[data-testid='cypress-headernav-profile']").click();
-        await mainpage.locator("[data-testid='cypress-headernav-login'] > div").click();
-        await mainpage.locator("[data-testid='social-auth-button-email']").click();
-        await mainpage.locator("[data-testid='email-login-email']").fill(username);
-        await mainpage.locator("span.t1ng71ne > span").click();
-        await mainpage.locator("span.t1ng71ne > span").click()
-        await mainpage.locator("[data-testid='email-signup-password']").type(invalidPassword);
-        await mainpage.locator("span.t1ng71ne > span").click()
+        await homepage.clickProfile();
+        await homepage.clickLogin();
+        await homepage.clickLoginWithEmail();
+        await homepage.typeEmail(username);
+        await homepage.clickContinue();
+        await homepage.clickContinue();
+        await homepage.fillPassword(invalidPassword);
+        await homepage.clickContinue();
 
+        const mainpage = homepage.getPage();
         const error = await mainpage.locator("section section").textContent();
         expect(error).toBe("Let's try that againInvalid login credentials. Please try again.");
     });
