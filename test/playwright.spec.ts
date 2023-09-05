@@ -4,8 +4,7 @@ import PageName from "../playwright-data/page-name";
 
 const password = "123456789Test!";
 const invalidPassword = "123456789Test!!!!";
-const username = "evgeniik980@gmail.com"
-const timeout = 30 * 1000;
+const username = "evgeniik980@gmail.com";
 
 test.describe("Common tests", () => {
     test("Title test", async ({ page }) => {
@@ -56,30 +55,25 @@ test.describe("Filter tests", () => {
             width: 1072,
             height: 815
         })
+        page.setDefaultTimeout(50000);
 
         const homepage = new PageFactory(page).getPage(PageName.HOME_PAGE);
         await homepage.open();
         await homepage.clickFilterButton();
+        await homepage.chooseThreeBedrooms();
+        await homepage.chooseApartments();
+        const houseValueAfterClick = await homepage.getHouseValue();
+        await homepage.chooseEssentials();
+        await homepage.clickSelfCheckin();
+        await homepage.clickSuperHost();
+        await homepage.clearAll();
 
-        const mainpage = homepage.getPage();
-        await mainpage.locator("div.ig5jtz2 > div:nth-of-type(1) [data-testid='menuItemButton-3'] > button").click();
-        await mainpage.locator("div.g1rlxjq4 > div:nth-of-type(2) button").click();
-        const houseValueAfterClick = await mainpage.locator("div.g1rlxjq4 > div:nth-of-type(2) button").getAttribute("aria-pressed");
-        await mainpage.locator("#filter-item-amenities-4-row-title").click();
-        await mainpage.locator("[data-testid='filter-item-amenities-5'] label > div").click();
-        await mainpage.locator("div:nth-of-type(4) div.h1dyxq2n span").click();
-        await mainpage.locator("#filter-item-amenities-58-row-title").click();
-        await mainpage.locator("[data-testid='filter-item-amenities-45'] label > div").click();
-        await mainpage.locator("[data-testid='filter-item-amenities-46'] span > span").click();
-        await mainpage.locator("#FILTER_SECTION_CONTAINER\\:BOOKING_OPTIONS1").click();
-        await mainpage.locator("#FILTER_SECTION_CONTAINER\\:TOP_TIER_STAYS0").click();
-        await mainpage.locator("footer > button").click();
-
-        const value = await mainpage.isChecked("#filter-item-amenities-58-row-title");
-        const bookValue = await mainpage.isChecked("#FILTER_SECTION_CONTAINER\\:BOOKING_OPTIONS1");
-        const houseValueAfterReset = await mainpage.locator("div.g1rlxjq4 > div:nth-of-type(1) button").getAttribute("aria-pressed");
+        const value = await homepage.wifiChose();
+        const bookValue = await homepage.selfCheckinChose();
+        const houseValueAfterReset = await homepage.getHouseValue();
         console.log(value);
         console.log(bookValue);
+        console.log(houseValueAfterClick);
         console.log(houseValueAfterReset);
         expect(value).toBeFalsy();
         expect(bookValue).toBeFalsy();

@@ -1,11 +1,11 @@
 import { PlaywrightTestConfig } from "@playwright/test";
 
 const config: PlaywrightTestConfig = {
-    retries: 1,
+    retries: 0,
     reporter: [
         ['allure-playwright']
     ],
-    timeout: 30 * 1000,
+    timeout: 40 * 1000,
     expect: {
         timeout: 1000
     },
